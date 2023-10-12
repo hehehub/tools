@@ -164,7 +164,7 @@ public:
             _elem[lo++] = _elem[hi++]; // [hi, _size)顺次前移hi - lo个单元
         }
         _size = lo; // 更新规模，直接丢弃尾部[lo, _size = hi)区间
-        shrink(); // 若有必要，则缩容
+        shrink();
         return hi - lo; // 返回被删除元素的数目
     }
 
