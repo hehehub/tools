@@ -11,8 +11,11 @@ int comparePoints(const void *a, const void *b)
     struct tower *pointA = (struct tower *)a;
     struct tower *pointB = (struct tower *)b;
 
-    // 按照x坐标从小到大排序
-    return pointA->x - pointB->x;
+    if (pointA->x < pointB->x)
+        return -1;
+    if (pointA->x > pointB->x)
+        return 1;
+    return 0;
 }
 
 // main函数里面这么操作
