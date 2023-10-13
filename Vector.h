@@ -84,10 +84,15 @@ protected:
 public:
     Vector(std::initializer_list<T> list) : _size(0), _capacity(DEFAULT_CAPACITY)
     {
+        if (list.size() > DEFAULT_CAPACITY)
+            _capacity = list.size();
         _elem = new T[_capacity];
         for (const auto &elem : list)
         {
-            expand();
+            if (_size >= _capacity)
+            {
+                expand(); // Expand the vector if necessary.
+            }
             _elem[_size++] = elem;
         }
     }
