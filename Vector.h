@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <utility>
 #include <math.h>
+#include <initializer_list>
 
 #define DEFAULT_CAPACITY 3
 
@@ -65,11 +66,11 @@ protected:
         T *A = _elem + lo; // 合并后的向量A[0, hi - lo) = _elem[lo, hi)
         int lb = mi - lo;
         T *B = new T[lb]; // 前子向量B[0, lb) = _elem[lo, mi)
-        for (Rank i = 0; i < lb; B[i] = A[i++])
+        for (int i = 0; i < lb; B[i] = A[i++])
             ; // 复制前子向量
         int lc = hi - mi;
         T *C = _elem + mi; // 后子向量C[0, lc) = _elem[mi, hi)
-        for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);)
+        for (int i = 0, j = 0, k = 0; (j < lb) || (k < lc);)
         {
             // B[j]和C[k]中的小者续至A末尾
             if ((j < lb) && (!(k < lc) || (B[j] <= C[k])))
@@ -81,6 +82,16 @@ protected:
     }
 
 public:
+    Vector(std::initializer_list<T> list) : _size(0), _capacity(DEFAULT_CAPACITY)
+    {
+        _elem = new T[_capacity];
+        for (const auto &elem : list)
+        {
+            expand();
+            _elem[_size++] = elem;
+        }
+    }
+
     Vector(int s = 0, T v = 0)
     {
         _capacity = fmax(DEFAULT_CAPACITY, s);
@@ -91,7 +102,12 @@ public:
 
     Vector(T const *A, int n) { copyFrom(A, 0, n); } // 数组整体复制
 
-    Vector(Vector<T> &&V) noexcept
+    Vector(const Vector<T> &V) // 拷贝构造
+    {
+        copyFrom(V._elem, 0, V._size);
+    }
+
+    Vector(Vector<T> &&V) noexcept // 移动构造
     {
         _elem = V._elem;         // 接管V的内部数组
         _size = V._size;         // 接管V的大小
@@ -102,7 +118,7 @@ public:
         V._capacity = 0;   // 将V的容量设为0
     }
 
-    Vector<T> &operator=(Vector<T> const &V)
+    Vector<T> &operator=(Vector<T> const &V) // 拷贝
     {
         if (_elem)
         {
@@ -110,6 +126,22 @@ public:
         }
         copyFrom(V._elem, 0, V.size()); // 整体复制
         return *this;                   // 返回当前对象的引用，以便链式赋值
+    }
+
+    Vector<T> &operator=(Vector<T> &&V) noexcept // 移动
+    {
+        if (this != &V) // 防止自赋值
+        {
+            delete[] _elem;  // 释放当前对象的资源
+            _elem = V._elem; // 接管V的资源
+            _size = V._size;
+            _capacity = V._capacity;
+
+            V._elem = nullptr;
+            V._size = 0;
+            V._capacity = 0;
+        }
+        return *this;
     }
 
     T &operator[](int r) const
