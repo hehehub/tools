@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#define DEFAULT_CAPACITY 3
+
 template <class T>
 class Stack
 {
