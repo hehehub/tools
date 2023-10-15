@@ -155,6 +155,18 @@ public:
         return _elem[r];
     }
 
+    bool operator==(Vector<T> const &equal)
+    {
+        if (_size != equal.size())
+            return false;
+        for (int i = 0; i < _size; i++)
+        {
+            if (_elem[i] != equal[i])
+                return false;
+        }
+        return true;
+    }
+
     void push_back(T const &e)
     {
         if (_size >= _capacity)
