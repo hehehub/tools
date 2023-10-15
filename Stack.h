@@ -54,5 +54,10 @@ public:
         return _elem[_size - 1];
     }
 
+    int size() const
+    {
+        return _size;
+    }
+
     ~Stack() { delete[] _elem; }
 };
