@@ -53,4 +53,6 @@ public:
     {
         return _elem[_size - 1];
     }
+
+    ~Stack() { delete[] _elem; }
 };
