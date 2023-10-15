@@ -277,5 +277,10 @@ public:
         merge(lo, mi, hi, temp);
     }
 
+    long long getinv()
+    {
+        return inverse;
+    }
+
     ~Vector() { delete[] _elem; } // 释放内部空间
 };
