@@ -1,24 +1,27 @@
+// 这个头文件不要引用，只是一个工具的使用示例
+#include <cstdio>
 #include <cstdlib>
 
 // 注意这里有函数，这个头文件不可以多次引用
 struct tower
 {
-    long long x, y;
+    int x, y;
 };
 
 int comparePoints(const void *a, const void *b)
 {
-    struct tower *pointA = (struct tower *)a;
-    struct tower *pointB = (struct tower *)b;
-
-    if (pointA->x < pointB->x)
-        return -1;
-    if (pointA->x > pointB->x)
-        return 1;
-    return 0;
+    return ((tower *)a)->x - ((tower *)b)->x;
 }
 
-// main函数里面这么操作
-// struct tower* towers = (struct tower*)malloc(n * sizeof(struct tower));// 存储所有灯塔坐标，这是创建数组，元素是二维数对
-// …………
-// qsort(towers, n, sizeof(struct tower), comparePoints);// 所有灯塔x坐标从小到大，这是qsort的用法
+int main()
+{
+    int n;
+    printf("%d", &n);
+    tower *towers = new tower[n];
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d %d", &towers[i].x, &towers[i].y);
+    }
+    qsort(towers, n, sizeof(tower), comparePoints);
+    return 0;
+}
