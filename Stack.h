@@ -11,6 +11,18 @@ class Stack
     int _capacity;
     T *_elem;
 
+    void expand()
+    {
+        if (_size < _capacity)
+            return;
+        _capacity = (_capacity < DEFAULT_CAPACITY) ? DEFAULT_CAPACITY : _capacity * 2;
+        T *oldElem = _elem;
+        _elem = new T[_capacity];
+        for (int i = 0; i < _size; i++)
+            _elem[i] = oldElem[i];
+        delete[] oldElem;
+    }
+
 public:
     Stack(int s = 0, T v = 0)
     {
@@ -20,7 +32,7 @@ public:
             ;
     }
 
-    void push()
+    void push(T const &e)
     {
         if (_size >= _capacity)
         {
