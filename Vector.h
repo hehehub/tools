@@ -10,7 +10,7 @@
 template <class T>
 class Vector
 {
-protected:
+    long long inverse = 0;
     int _size;
     int _capacity;
     T *_elem;
@@ -56,24 +56,30 @@ protected:
         }
     }
 
-    void merge(int lo, int mi, int hi)
+    void merge(int lo, int mi, int hi, T *temp)
     {
-        T *A = _elem + lo; // 合并后的向量A[0, hi - lo) = _elem[lo, hi)
-        int lb = mi - lo;
-        T *B = new T[lb]; // 前子向量B[0, lb) = _elem[lo, mi)
-        for (int i = 0; i < lb; B[i] = A[i++])
-            ; // 复制前子向量
-        int lc = hi - mi;
-        T *C = _elem + mi; // 后子向量C[0, lc) = _elem[mi, hi)
-        for (int i = 0, j = 0, k = 0; (j < lb) || (k < lc);)
+        int i = lo, j = mi, k = 0;
+
+        while (i < mi && j < hi)
         {
-            // B[j]和C[k]中的小者续至A末尾
-            if ((j < lb) && (!(k < lc) || (B[j] <= C[k])))
-                A[i++] = B[j++];
-            if ((k < lc) && (!(j < lb) || (C[k] < B[j])))
-                A[i++] = C[k++];
+            if (_elem[i] <= _elem[j])
+            {
+                temp[k++] = _elem[i++];
+            }
+            else
+            {
+                inverse += mi - i;
+                temp[k++] = _elem[j++];
+            }
         }
-        delete[] B; // 释放临时空间B
+
+        while (i < mi)
+            temp[k++] = _elem[i++];
+        while (j < hi)
+            temp[k++] = _elem[j++];
+
+        for (int i = 0, j = lo; j < hi;)
+            _elem[j++] = temp[i++];
     }
 
 public:
@@ -158,7 +164,7 @@ public:
         _elem[_size++] = e; // Add the element to the end of the vector.
     }
 
-    int size()
+    int size() const
     {
         return _size;
     }
@@ -255,11 +261,20 @@ public:
     void mergeSort(int lo, int hi)
     {
         if (hi - lo < 2)
-            return;             // 单元素区间自然有序，否则...
-        int mi = (lo + hi) / 2; // 以中点为界
-        mergeSort(lo, mi);
-        mergeSort(mi, hi); // 分别排序
-        merge(lo, mi, hi); // 归并
+            return;
+        T *temp = new T[hi - lo]; // 这里的temp传入mergeSortRecursively函数，只分配一次临时内存，而不是总新分配B
+        mergeSortRecursively(lo, hi, temp);
+        delete[] temp;
+    }
+
+    void mergeSortRecursively(int lo, int hi, T *temp) // 真正执行递归调用的函数，它采用外部传入的临时数组temp进行归并操作，而不是每次都新建一个
+    {
+        if (hi - lo < 2)
+            return;
+        int mi = (lo + hi) / 2;
+        mergeSortRecursively(lo, mi, temp);
+        mergeSortRecursively(mi, hi, temp);
+        merge(lo, mi, hi, temp);
     }
 
     ~Vector() { delete[] _elem; } // 释放内部空间
