@@ -1,5 +1,4 @@
 #pragma once
-
 #include <math.h>
 
 #define DEFAULT_CAPACITY 3
