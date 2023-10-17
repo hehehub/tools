@@ -58,5 +58,10 @@ public:
         return _size;
     }
 
+    bool empty()
+    {
+        return _size == 0;
+    }
+
     ~Stack() { delete[] _elem; }
 };
