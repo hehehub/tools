@@ -186,7 +186,7 @@ public:
 
     T &back()
     {
-        return elem[_size - 1];
+        return _elem[_size - 1];
     }
 
     int size() const
