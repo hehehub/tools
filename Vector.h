@@ -176,6 +176,19 @@ public:
         _elem[_size++] = e; // Add the element to the end of the vector.
     }
 
+    void pop_back()
+    {
+        if (_size > 0)
+        {
+            _size--;
+        }
+    }
+
+    T &back()
+    {
+        return elem[_size - 1];
+    }
+
     int size() const
     {
         return _size;
@@ -184,14 +197,6 @@ public:
     bool empty()
     {
         return _size == 0;
-    }
-
-    void pop_back()
-    {
-        if (_size > 0)
-        {
-            _size--;
-        }
     }
 
     int erase(int position)
