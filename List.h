@@ -101,29 +101,29 @@ public:
     {
     }
 
-    ListNode<T> *insertAsFirst(T const &e)
+    ListNode<T> *insertAsFirst(T const &e) // e当作首节点插入
     {
         _size++;
         return header->insertAsSucc(e);
-    } // e当作首节点插入
+    }
 
-    ListNode<T> *insertAsLast(T const &e)
+    ListNode<T> *insertAsLast(T const &e) // e当作末节点插入
     {
         _size++;
         return trailer->insertAsPred(e);
-    } // e当作末节点插入
+    }
 
-    ListNode<T> *insertA(ListNode<T> *p, T const &e)
+    ListNode<T> *insertA(ListNode<T> *p, T const &e) // e当作p的后继插入（After）
     {
         _size++;
         return p->insertAsSucc(e);
-    } // e当作p的后继插入（After）
+    }
 
-    ListNode<T> *insertB(ListNode<T> *p, T const &e)
+    ListNode<T> *insertB(ListNode<T> *p, T const &e) // e当作p的前驱插入（Before）
     {
         _size++;
         return p->insertAsPred(e);
-    } // e当作p的前驱插入（Before）
+    }
 
     T remove(ListNode<T> *p)
     {
@@ -136,7 +136,7 @@ public:
     }
 
     // 在无序列表内节点p（可能是trailer）的n个（真）前驱中，找到等于e的最后者
-    find(T const &e, int n, ListNode<T> *p) const
+    ListNode<T> *find(T const &e, int n, ListNode<T> *p) const
     {
         while (0 < n--) // 对于p的最近的n个前驱，从右向左
             if (e == (p = p->pred)->data)
@@ -144,7 +144,7 @@ public:
         return NULL;      // p越出左边界意味着区间内不含e，查找失败
     }                     // 失败时，返回NULL
 
-    search(T const &e, int n, ListNode<T> *p) const
+    ListNode<T> *search(T const &e, int n, ListNode<T> *p) const
     {
         while (0 <= n--) // 对于p的最近的n个前驱，从右向左逐个比较
             if (((p = p->pred)->data) <= e)
