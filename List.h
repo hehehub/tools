@@ -83,6 +83,20 @@ protected:
     }
 
 public:
+    ListNode<T> *first()
+    {
+        if (_size <= 0)
+            return nullptr;
+        return header->succ;
+    }
+
+    ListNode<T> *last()
+    {
+        if (_size <= 0)
+            return nullptr;
+        return trailer->pred;
+    }
+
     T &List<T>::operator[](int r) const
     {
         ListNode<T> *p = first(); // 从首节点出发
