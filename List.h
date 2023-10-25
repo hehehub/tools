@@ -24,6 +24,10 @@ struct ListNode
 
     ListNode<T> *insertAsSucc(T const &e) // 紧随当前节点之后插入新节点
     {
+        ListNode<T> *x = new ListNode(e, this, succ); // 创建新节点
+        succ->pred = x;
+        succ = x; // 设置正向链接
+        return x; // 返回新节点的位置
     }
 };
 
