@@ -4,9 +4,10 @@
 template <typename T>
 struct ListNode
 {
+    // 数值、前驱、后继
     T data;
     ListNode<T> *pred;
-    ListNode<T> *succ; // 数值、前驱、后继
+    ListNode<T> *succ;
     // 构造函数
     ListNode() {} // 针对header和trailer的构造
     ListNode(T e, ListNode<T> *p = NULL, ListNode<T> *s = NULL)
