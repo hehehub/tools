@@ -75,7 +75,7 @@ protected:
             // p归入合并的列表，并替换为其直接后继
             else // 若p已超出右界或v(q) < v(p)，则
             {
-                insertB(p, L.remove((q = q->succ)->pred));
+                insert1(p, L.remove((q = q->succ)->pred));
                 m--;
             }
         // 将q转移至p之前
@@ -118,16 +118,16 @@ public:
         return trailer->insertAsPred(e);
     }
 
-    ListNode<T> *insertA(ListNode<T> *p, T const &e) // e当作p的后继插入（After）
-    {
-        _size++;
-        return p->insertAsSucc(e);
-    }
-
-    ListNode<T> *insertB(ListNode<T> *p, T const &e) // e当作p的前驱插入（Before）
+    ListNode<T> *insert1(ListNode<T> *p, T const &e) // e当作p的前驱插入
     {
         _size++;
         return p->insertAsPred(e);
+    }
+
+    ListNode<T> *insert2(ListNode<T> *p, T const &e) // e当作p的后继插入
+    {
+        _size++;
+        return p->insertAsSucc(e);
     }
 
     T remove(ListNode<T> *p)
@@ -176,7 +176,7 @@ public:
     {
         for (int r = 0; r < n; r++)
         { // 逐一为各节点
-            insertA(search(p->data, r, p), p->data);
+            insert2(search(p->data, r, p), p->data);
             // 查找适当的位置并插入
             p = p->succ;
             remove(p->pred); // 转向下一节点
@@ -194,7 +194,7 @@ public:
         { // 在至少还剩两个节点之前，在待排序区间内
             ListNode<T> *max = selectMax(head->succ, n);
             // 找出最大者（歧义时后者优先）
-            insertB(tail, remove(max));
+            insert1(tail, remove(max));
             // 将其移至无序区间末尾（作为有序区间新的首元素）
             tail = tail->pred;
             n--;
