@@ -1,9 +1,9 @@
+// 列表节点模板类（以双向链表形式实现）
 #pragma once
 
 template <typename T>
 struct ListNode
 {
-    // 列表节点模板类（以双向链表形式实现）
     T data;
     ListNode<T> *pred;
     ListNode<T> *succ; // 数值、前驱、后继
