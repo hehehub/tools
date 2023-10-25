@@ -217,10 +217,9 @@ public:
     // 析构函数
     ~List() // 释放（包含头、尾哨兵在内的）所有节点
     {
-        int oldSize = _size;
-        while (_size > 0)
+        while (_size > 0) // 反复删除首节点，直至列表变空
             remove(header->succ);
-        // 反复删除首节点，直至列表变空
+        // 清空列表，释放头、尾哨兵节点
         delete header;
         delete trailer;
     }
