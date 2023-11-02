@@ -156,7 +156,7 @@ public:
         return *this;
     }
 
-    T &operator[](int r) const
+    T &operator[](int r)
     {
         return _elem[r];
     }
