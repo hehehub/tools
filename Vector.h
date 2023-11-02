@@ -81,6 +81,13 @@ class Vector
             _elem[j++] = temp[i++];
     }
 
+    int comparePoints(const void *a, const void *b)
+    {
+        T va = *(const T *)a;
+        T vb = *(const T *)b;
+        return va - vb;
+    }
+
 public:
     Vector(std::initializer_list<T> list) : _size(0), _capacity(DEFAULT_CAPACITY)
     {
@@ -245,6 +252,11 @@ public:
         _size = lo; // 更新规模，直接丢弃尾部[lo, _size = hi)区间
         shrink();
         return hi - lo; // 返回被删除元素的数目
+    }
+
+    void sort()
+    {
+        qsort(_elem, _size, sizeof(T), comparePoints);
     }
 
     int deduplicate() // 去重
