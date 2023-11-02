@@ -81,7 +81,7 @@ class Vector
             _elem[j++] = temp[i++];
     }
 
-    int comparePoints(const void *a, const void *b)
+    static int comparePoints(const void *a, const void *b)
     {
         T va = *(const T *)a;
         T vb = *(const T *)b;
@@ -310,16 +310,16 @@ public:
         return inverse;
     }
 
-    // 二分查找算法（版本B）：在有序向量的区间[lo, hi)内查找元素e，0 <= lo <= hi <= _size
-    static int binSearch(T *A, T const &e, int lo, int hi)
+    int binSearch(T const &e)
     {
-        while (1 < hi - lo)
-        {                                    // 每步迭代仅有两个分支；成功查找不能提前终止
-            int mi = (lo + hi) >> 1;         // 以中点为轴点
-            (e < A[mi]) ? hi = mi : lo = mi; // 经比较后确定深入[lo, mi)或[mi, hi)
-        }                                    // 出口时hi = lo + 1，查找区间仅含一个元素A[lo]
-        return (e == A[lo]) ? lo : -1;       // 查找成功时返回对应的秩；否则统一返回-1
-    }
+        int lo = 0, hi = _size;
+        while (lo < hi)
+        {                                            // 每步迭代仅需做一次比较判断，有两个分支
+            int mi = (lo + hi) >> 1;                 // 以中点为轴点
+            (e < _elem[mi]) ? hi = mi : lo = mi + 1; // 经比较后确定深入[lo, mi)或(mi, hi)
+        }                                            // 成功查找不能提前终止
+        return --lo;                                 // 循环结束时，lo为大于e的元素的最小秩，故lo - 1即不大于e的元素的最大秩
+    }                                                // 有多个命中元素时，总能保证返回秩最大者；查找失败时，能够返回失败的位置
 
     ~Vector() { delete[] _elem; } // 释放内部空间
 };
