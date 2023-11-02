@@ -7,11 +7,13 @@
 template <class T>
 struct BinNode
 {
-    T data;             // 数值
+    T data = 0;         // 数值
     BinNode<T> *parent; // 父节点
     BinNode<T> *lc;     // 左、右孩子
     BinNode<T> *rc;
     int height; // 高度
+    T a[4000000];
+    static current = 0;
 
     BinNode(T const &e, BinNode<T> *p = nullptr)
         : data(e), parent(p), lc(nullptr), rc(nullptr), height(0) {}
@@ -23,7 +25,7 @@ struct BinNode
 
     BinNode<T> *insertAsRC(T const &e) // 作为当前节点的右孩子插入新节点
     {
-        return rc = new BinNode(this, e);
+        return rc = new BinNode(e, this);
     }
 
     BinNode<T> *succ() // 当前节点直接后继
@@ -33,12 +35,21 @@ struct BinNode
 
     bool HasLChild()
     {
-        return node->lc != nullptr;
+        return this->lc != nullptr;
     }
 
     bool HasRChild()
     {
-        return node->rc != nullptr;
+        return this->rc != nullptr;
+    }
+
+    visit(T data)
+    {
+        if (data)
+        {
+            a[current] = data;
+            current++;
+        }
     }
 
     template <class VST>
@@ -48,7 +59,8 @@ struct BinNode
         Q.push(this);          // 根节点入队
         while (!Q.empty())     // 在队列再次变空之前，反复迭代
         {
-            BinNode<T> *x = Q.pop();
+            BinNode<T> *x = Q.front();
+            Q.pop();
             visit(x->data); // 取出队首节点并访问之
             if (x->HasLChild())
                 Q.push(x->lc); // 左孩子入队
@@ -76,15 +88,17 @@ struct BinNode
         if (!this)
             return -1;
         else
-            return 1 + max(height(lc), height(rc));
+            return 1 + fmax(height(lc), height(rc));
     }
 };
 
 template <class T, class VST>
 class BinTree
 {
-    int _size;         // 规模
-    BinNode<T> *_root; // 根节点
+    int _size;              // 规模
+    static int current = 0; // 对吗？
+    BinNode<T> *_root;      // 根节点
+    T a[4000000];
 
     virtual int updateHeight(BinNode<T> *x) // 更新节点x高度
     {
@@ -109,6 +123,15 @@ class BinTree
         return n;
     }
 
+    void visit(T data)
+    {
+        if (data)
+        {
+            a[current] = data;
+            current++;
+        }
+    }
+
 public:
     int size() const { return _size; } // 规模
 
@@ -126,6 +149,8 @@ public:
 
     void travPre(BinNode<T> *x, VST &visit) // 前序遍历
     {
+        if (x == nullptr)
+            return;
         visit(x->data);
         travPre(x->lc, visit);
         travPre(x->rc, visit);
@@ -133,6 +158,8 @@ public:
 
     void travIn_R(BinNode<T> *x, VST &visit) // 中序遍历
     {
+        if (x == nullptr)
+            return;
         travIn_R(x->lc, visit);
         visit(x->data);
         travIn_R(x->rc, visit);
@@ -140,6 +167,8 @@ public:
 
     void travPost_R(BinNode<T> *x, VST &visit) // 后序遍历
     {
+        if (x == nullptr)
+            return;
         travPost_R(x->lc, visit);
         travPost_R(x->rc, visit);
         visit(x->data);
@@ -155,7 +184,13 @@ public:
 
     int remove(BinNode<T> *x) // 删除子树x，更新规模，返回删除节点总数
     {
-        FromParentTo(*x) = nullptr;   // 切断来自父节点的指针
+        if (x->parent) // 切断来自父结点的指针
+        {
+            if (x->parent->lc == x)
+                x->parent->lc = nullptr;
+            if (x->parent->rc == x)
+                x->parent->rc = nullptr;
+        }
         updateHeightAbove(x->parent); // 更新祖先高度
         int n = removeAt(x);
         _size -= n;
