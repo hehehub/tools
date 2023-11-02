@@ -86,6 +86,7 @@ class Vector
         T va = *(const T *)a;
         T vb = *(const T *)b;
         return va - vb;
+        // return *(T *)a - *(T *)b;
     }
 
 public:
