@@ -21,7 +21,7 @@ private:
         _elem = new T[_capacity];
         for (int i = 0; i < _size; ++i)
         {
-            _elem[i] = oldElem[(_front + i) % _size]; // 从 _front 开始复制
+            _elem[(_front + i) % _capacity] = oldElem[(_front + i) % _size]; // 使用新容量
         }
         _front = 0; // 重置 _front
         delete[] oldElem;

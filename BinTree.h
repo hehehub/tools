@@ -12,8 +12,6 @@ struct BinNode
     BinNode<T> *lc;     // 左、右孩子
     BinNode<T> *rc;
     int height; // 高度
-    T a[4000000];
-    static current = 0;
 
     BinNode(T const &e, BinNode<T> *p = nullptr)
         : data(e), parent(p), lc(nullptr), rc(nullptr), height(0) {}
@@ -43,13 +41,8 @@ struct BinNode
         return this->rc != nullptr;
     }
 
-    visit(T data)
+    void visit(T data)
     {
-        if (data)
-        {
-            a[current] = data;
-            current++;
-        }
     }
 
     template <class VST>
@@ -95,9 +88,9 @@ struct BinNode
 template <class T, class VST>
 class BinTree
 {
-    int _size;              // 规模
-    static int current = 0; // 对吗？
-    BinNode<T> *_root;      // 根节点
+    int _size;         // 规模
+    int current;       // 对吗？
+    BinNode<T> *_root; // 根节点
     T a[4000000];
 
     virtual int updateHeight(BinNode<T> *x) // 更新节点x高度
@@ -133,6 +126,11 @@ class BinTree
     }
 
 public:
+    BinTree() : _size(0), current(0)
+    {
+        _root = new BinNode<T>; // 创建一个空的根节点
+    }
+
     int size() const { return _size; } // 规模
 
     bool empty() const { return !_root; } // 判空
@@ -145,6 +143,14 @@ public:
         x->insertAsLC(e);
         updateHeightAbove(x);
         return x->lc;
+    }
+
+    BinNode<T> *insertAsRC(BinNode<T> *x, T const &e) // e插入为x的左孩子
+    {
+        _size++;
+        x->insertAsRC(e);
+        updateHeightAbove(x);
+        return x->rc;
     }
 
     void travPre(BinNode<T> *x, VST &visit) // 前序遍历
@@ -195,6 +201,14 @@ public:
         int n = removeAt(x);
         _size -= n;
         return n;
+    }
+
+    void print()
+    {
+        for (int i = 0; i < current; i++)
+        {
+            printf("%d ", a[i]);
+        }
     }
 
     ~BinTree() // 析构函数
