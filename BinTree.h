@@ -9,9 +9,9 @@ struct BinNode
 {
     T data = 0;         // 数值
     BinNode<T> *parent; // 父节点
-    BinNode<T> *lc;     // 左、右孩子
-    BinNode<T> *rc;
-    int height; // 高度
+    BinNode<T> *lc;     // 左孩子
+    BinNode<T> *rc;     // 右孩子
+    int height;         // 高度
 
     BinNode(T const &e, BinNode<T> *p = nullptr)
         : data(e), parent(p), lc(nullptr), rc(nullptr), height(0) {}
