@@ -81,6 +81,16 @@ class Vector
             _elem[j++] = temp[i++];
     }
 
+    void mergeSortRecursively(int lo, int hi, T *temp) // 真正执行递归调用的函数，它采用外部传入的临时数组temp进行归并操作，而不是每次都新建一个
+    {
+        if (hi - lo < 2)
+            return;
+        int mi = (lo + hi) / 2;
+        mergeSortRecursively(lo, mi, temp);
+        mergeSortRecursively(mi, hi, temp);
+        merge(lo, mi, hi, temp);
+    }
+
     static int comparePoints(const void *a, const void *b)
     {
         T va = *(const T *)a;
@@ -294,16 +304,6 @@ public:
         T *temp = new T[hi - lo]; // 这里的temp传入mergeSortRecursively函数，只分配一次临时内存，而不是总新分配B
         mergeSortRecursively(lo, hi, temp);
         delete[] temp;
-    }
-
-    void mergeSortRecursively(int lo, int hi, T *temp) // 真正执行递归调用的函数，它采用外部传入的临时数组temp进行归并操作，而不是每次都新建一个
-    {
-        if (hi - lo < 2)
-            return;
-        int mi = (lo + hi) / 2;
-        mergeSortRecursively(lo, mi, temp);
-        mergeSortRecursively(mi, hi, temp);
-        merge(lo, mi, hi, temp);
     }
 
     long long getinv()
