@@ -123,7 +123,10 @@ public:
             ;
     }
 
-    Vector(T const *A, int n) { copyFrom(A, 0, n); } // 数组整体复制
+    Vector(T const *A, int n) // 数组整体复制
+    {
+        copyFrom(A, 0, n);
+    }
 
     Vector(const Vector<T> &V) // 拷贝构造
     {
@@ -201,7 +204,7 @@ public:
         }
     }
 
-    T &back()
+    T &back() const
     {
         return _elem[_size - 1];
     }
