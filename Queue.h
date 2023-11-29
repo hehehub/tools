@@ -43,14 +43,12 @@ public:
     }
 
     // 出队
-    T &pop()
+    void pop()
     {
         if (_size == 0)
             return; // 防止空队列操作
-        T temp = _elem[_size];
         _front = (_front + 1) % _capacity;
         --_size;
-        return temp;
     }
 
     // 获取队列头部元素
