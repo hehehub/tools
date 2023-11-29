@@ -1,7 +1,7 @@
 #pragma once
 #include <math.h> // std::max
 
-#define DEFAULT_CAPACITY 10 // 默认的容量
+#define DEFAULT_CAPACITY 3 // 默认的容量
 
 template <class T>
 class Queue
