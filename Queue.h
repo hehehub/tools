@@ -1,15 +1,16 @@
 #pragma once
 #include <math.h> // std::max
 
+#define DEFAULT_CAPACITY 10 // 默认的容量
+
 template <class T>
 class Queue
 {
 private:
-    static const int DEFAULT_CAPACITY = 10; // 默认的容量
-    int _front;                             // 队列头部索引
-    int _size;                              // 队列大小
-    int _capacity;                          // 队列容量
-    T *_elem;                               // 动态数组
+    int _front;    // 队列头部索引
+    int _size;     // 队列大小
+    int _capacity; // 队列容量
+    T *_elem;      // 动态数组
 
     // 扩展队列容量
     void expand()
