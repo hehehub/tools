@@ -1,8 +1,6 @@
 #pragma once
 #include <math.h> // std::max
 
-#define DEFAULT_CAPACITY 3 // 默认的容量
-
 template <class T>
 class Queue
 {
@@ -17,20 +15,37 @@ private:
     {
         if (_size < _capacity)
             return;
-        _capacity = fmax(DEFAULT_CAPACITY, _capacity * 2);
+        _capacity = fmax(10, _capacity * 2);
         T *oldElem = _elem;
         _elem = new T[_capacity];
         for (int i = 0; i < _size; ++i)
         {
-            _elem[(_front + i) % _capacity] = oldElem[(_front + i) % _capacity]; // 使用新容量
+            _elem[i] = oldElem[(_front + i) % _size];
         }
         _front = 0; // 重置 _front
         delete[] oldElem;
     }
 
+    void shrink() // 有必要时缩容
+    {
+        if (_size < _capacity) // 判断是否需要缩容，这里我们假设当大小小于容量的一半时进行缩容
+        {
+            T *newElem = new T[_size];
+            for (int i = 0; i < _size; i++)
+            {
+                newElem[i] = _elem[(_front + i) % _capacity];
+            }
+
+            delete[] _elem;
+            _elem = newElem;
+            _front = 0;
+            _capacity = _size;
+        }
+    }
+
 public:
     // 构造函数
-    Queue(int cap = DEFAULT_CAPACITY) : _front(0), _size(0), _capacity(cap)
+    Queue(int cap = 10) : _front(0), _size(0), _capacity(cap)
     {
         _elem = new T[_capacity];
     }
@@ -50,12 +65,18 @@ public:
             return; // 防止空队列操作
         _front = (_front + 1) % _capacity;
         --_size;
+        shrink();
     }
 
     // 获取队列头部元素
     T &front()
     {
         return _elem[_front];
+    }
+
+    T &back()
+    {
+        return _elem[(_front + _size - 1) % _capacity];
     }
 
     // 获取队列元素数量

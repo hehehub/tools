@@ -175,6 +175,11 @@ public:
         return _elem[r];
     }
 
+    T const &operator[](int r) const
+    {
+        return _elem[r];
+    }
+
     bool operator==(Vector<T> const &equal)
     {
         if (_size != equal.size())
