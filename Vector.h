@@ -14,6 +14,47 @@ class Vector
     int _capacity;
     T *_elem;
 
+    class Iterator
+    {
+        T *ptr;
+
+    public:
+        Iterator(T *ptr) : ptr(ptr) {}
+
+        Iterator &operator++()
+        {
+            ++ptr;
+            return *this;
+        }
+
+        Iterator operator++(int)
+        {
+            Iterator temp = *this;
+            ++*this;
+            return temp;
+        }
+
+        bool operator!=(const Iterator &other) const
+        {
+            return ptr != other.ptr;
+        }
+
+        bool operator==(const Iterator &other) const
+        {
+            return ptr == other.ptr;
+        }
+
+        T &operator*() const
+        {
+            return *ptr;
+        }
+
+        T *operator->() const
+        {
+            return ptr;
+        }
+    };
+
     void copyFrom(T const *A, int lo, int hi) // 以数组区间A[lo, hi)为蓝本复制向量
     {
         // 分配空间，规模清零
@@ -190,6 +231,16 @@ public:
                 return false;
         }
         return true;
+    }
+
+    Iterator begin()
+    {
+        return Iterator(_elem);
+    }
+
+    Iterator end()
+    {
+        return Iterator(_elem + _size);
     }
 
     void push_back(T const &e)
