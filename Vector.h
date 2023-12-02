@@ -53,6 +53,26 @@ class Vector
         {
             return ptr;
         }
+
+        Iterator operator+(int n) const
+        {
+            return Iterator(ptr + n);
+        }
+
+        Iterator operator-(int n) const
+        {
+            return Iterator(ptr - n);
+        }
+
+        int operator-(const Iterator &other) const
+        {
+            return ptr - other.ptr;
+        }
+
+        static int distance(Iterator first, Iterator last)
+        {
+            return last - first; // 直接返回两个迭代器的差值
+        }
     };
 
     void copyFrom(T const *A, int lo, int hi) // 以数组区间A[lo, hi)为蓝本复制向量
@@ -183,6 +203,19 @@ public:
         V._elem = nullptr; // 确保V不再指向内部数组
         V._size = 0;       // 将V的大小设为0
         V._capacity = 0;   // 将V的容量设为0
+    }
+
+    template <class Iter>
+    Vector(Iter begin, Iter end)
+    {
+        _size = 0;
+        _capacity = Iterator::distance(begin, end);
+        _capacity = fmax(_capacity, DEFAULT_CAPACITY); // 确保_capacity至少为DEFAULT_CAPACITY
+        _elem = new T[_capacity];
+        for (Iter it = begin; it != end; ++it)
+        {
+            _elem[_size++] = *it;
+        }
     }
 
     Vector<T> &operator=(Vector<T> const &V) // 拷贝
