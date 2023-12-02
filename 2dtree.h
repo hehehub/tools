@@ -1,11 +1,25 @@
 #pragma once
 #include "Vector.h"
-#include <algorithm>
+#include <cstdlib>
 
 struct Point
 {
     double x, y;
 };
+
+int compareX(const void *a, const void *b)
+{
+    Point *pointA = (Point *)a;
+    Point *pointB = (Point *)b;
+    return (pointA->x > pointB->x) - (pointA->x < pointB->x);
+}
+
+int compareY(const void *a, const void *b)
+{
+    Point *pointA = (Point *)a;
+    Point *pointB = (Point *)b;
+    return (pointA->y > pointB->y) - (pointA->y < pointB->y);
+}
 
 struct Node
 {
@@ -26,13 +40,11 @@ private:
         int axis = depth % 2;
         if (axis == 0)
         {
-            std::sort(points.begin(), points.end(), [](Point a, Point b)
-                      { return a.x < b.x; });
+            qsort(&points[0], points.size(), sizeof(Point), compareX);
         }
         else
         {
-            std::sort(points.begin(), points.end(), [](Point a, Point b)
-                      { return a.y < b.y; });
+            qsort(&points[0], points.size(), sizeof(Point), compareY);
         }
 
         int median = points.size() / 2;
