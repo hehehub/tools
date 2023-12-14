@@ -115,4 +115,9 @@ public:
     {
         return numCounts;
     }
+
+    bool empty()
+    {
+        return numCounts == 0;
+    }
 };
