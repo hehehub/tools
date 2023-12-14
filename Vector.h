@@ -176,12 +176,25 @@ public:
         }
     }
 
-    Vector(int s = 0, T v = 0)
+    Vector(int s = 0)
     {
         _capacity = fmax(DEFAULT_CAPACITY, s);
         _elem = new T[_capacity];
-        for (_size = 0; _size < s; _elem[_size++] = v)
-            ;
+        for (_size = 0; _size < s; _size++)
+        {
+            _elem[_size] = T(); // 使用 T 的默认构造函数
+        }
+    }
+
+    // 构造函数，指定大小和默认值
+    Vector(int s, T v)
+    {
+        _capacity = fmax(DEFAULT_CAPACITY, s);
+        _elem = new T[_capacity];
+        for (_size = 0; _size < s; _size++)
+        {
+            _elem[_size] = v;
+        }
     }
 
     Vector(T const *A, int n) // 数组整体复制
