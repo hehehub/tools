@@ -17,9 +17,10 @@ public:
     {
         if (level < another.level)
             return true;
-        if (name < another.name)
-            return true;
-        return false;
+        else if (level == another.level)
+            return name < another.name;
+        else
+            return false;
     }
 };
 
@@ -28,45 +29,43 @@ class priorqueue
     Vector<task> queue;
     int numCounts;
 
-    void percolateUp(int index, task _task)
+    void percolateUp(int index)
     {
+        task _task = queue[index];
         int parentIndex = (index - 1) / 2;
-        while (index > 0 && _task < queue[parentIndex]) //
+        while (index > 0 && _task < queue[parentIndex])
         {
-            queue[index] = queue[parentIndex];
+            queue[index] = queue[parentIndex]; // ?
             index = parentIndex;
             parentIndex = (parentIndex - 1) / 2;
         }
         queue[index] = _task;
     }
 
-    void percolateDown(int childTree, task Task) // 下滤
+    void percolateDown(int index) // 下滤
     {
-        int index = childTree;          // 目标节点索引
-        int maxChild = 2 * (index + 1); // 目标节点右子节点
-        bool godown = true;             // 循环下滤退出标志
-        while (godown && maxChild < numCounts)
+        task _task = queue[index];
+        int child = 2 * index + 1; // 左子节点
+        while (child < numCounts)
         {
-            godown = false;
-            if (queue[maxChild - 1] < queue[maxChild]) //
-                --maxChild;                            // 若左孩子大，则更新为左孩子
-            if (queue[maxChild] < Task)                //
-            {                                          // 若父节点小于孩子，则下滤
-                godown = true;
-                queue[index] = queue[maxChild]; // 令较大值为交换值
-                index = maxChild;               // 该交换节点索引下移
-                maxChild = 2 * (maxChild + 1);  // 重新计算交换节点右子节点
+            // 选出左右子节点中较小的一个
+            if (child + 1 < numCounts && queue[child + 1] < queue[child])
+            {
+                child++;
             }
-        }
-        if (maxChild == numCounts)
-        {
-            if (queue[maxChild - 1] < Task)
-            { // 令左子节点值为交换值
-                queue[index] = queue[maxChild - 1];
-                index = maxChild - 1;
+
+            // 如果Task小于或等于较小的子节点，下滤结束
+            if (_task < queue[child])
+            {
+                break;
             }
+
+            // 否则，将较小的子节点向上移动
+            queue[index] = queue[child];
+            index = child;
+            child = 2 * index + 1;
         }
-        queue[index] = Task; // 将调整值赋予交换节点
+        queue[index] = _task;
     }
 
     void build()
@@ -77,8 +76,8 @@ class priorqueue
         int parent = numCounts / 2 - 1;
         while (1)
         {
-            percolateDown(parent, queue[parent]);
-            if (0 == parent)
+            percolateDown(parent);
+            if (parent == 0)
                 return; // 到达根节点，返回
             --parent;
         }
@@ -95,15 +94,30 @@ public:
     {
         queue.push_back(_task);
         numCounts++;
-        percolateUp(numCounts - 1, queue[numCounts - 1]);
+        percolateUp(numCounts - 1);
     }
 
     void pop()
     {
-        task _task = queue[numCounts - 1];
-        queue[numCounts - 1] = queue[0];
+        if (numCounts <= 0)
+            return; // 如果队列为空，则不执行任何操作
+
+        if (numCounts == 1)
+        {
+            // 如果队列中只有一个元素，直接移除它
+            queue.pop_back();
+            numCounts--;
+            return;
+        }
+
+        // 将最后一个元素移动到顶部
+        queue[0] = queue[numCounts - 1];
+        // 移除最后一个元素
+        queue.pop_back();
         numCounts--;
-        percolateDown(0, _task); // 下滤
+
+        // 恢复堆的性质
+        percolateDown(0);
     }
 
     task &top()
